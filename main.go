@@ -29,6 +29,9 @@ func init() {
 	}
 	//首次执行创建数据库，并生生一个锁文件
 	HELPS.CreateDB()
+
+	//开启session
+	beego.BConfig.WebConfig.Session.SessionOn = true
 }
 
 func main() {

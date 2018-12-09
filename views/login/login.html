@@ -134,7 +134,7 @@
                 $.post('dologin',{'user_name':cuser,'password':cpwd},function(x){
 
                     if(x.status==1){
-                        window.location.href= '../';
+                        window.location.href= '/index/index';
                     }else{
                         cmsg.html(x.msg);
                     }

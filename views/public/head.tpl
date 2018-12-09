@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="/static/assets/css/bootstrap.css" />
 <link rel="stylesheet" href="/static/assets/css/font-awesome.css" />
 <link rel="stylesheet" href="/static/assets/css/chosen.css" />
-<link rel="stylesheet" href="/static/assets/css/datepicker.css" />   
+<link rel="stylesheet" href="/static/assets/css/datepicker.css" />
 <link rel="stylesheet" href="/static/assets/css/daterangepicker.css" />
 
 <!-- page specific plugin styles -->
@@ -42,6 +42,14 @@
 <!--[if lte IE 8]>
 <script src="/static/assets/js/html5shiv.js"></script>
 <script src="/static/assets/js/respond.js"></script>
+<!--引入datatables>
+<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.15/css/jquery.dataTables.css">
+
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
 <![endif]-->
 
 <style type="text/css">

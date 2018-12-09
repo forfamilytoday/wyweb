@@ -1,10 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+{{template "./public/head.tpl"}}
+    <link href="/static/assets/css/ui.fancytree.min.css" rel="stylesheet" type="text/css" class="skinswitcher">
+    <style>
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        h1 {
+            font-family: tahoma,arial, verdana, tahoma, sans-serif;
+            font-size: 21px;
+            font-weight: bold;
+            letter-spacing: -1px;
+            color: #333;
+            margin: 0px;
+            padding: 8px 0px 5px 0px;
+        }
+        .cp-desc-messages {
+            color: #666666;
+            background-repeat: no-repeat;
+            margin: 0px 10px 15px 10px;
+            padding: 6px 10px 6px 35px;
+            border: solid 1px #f1f1f1;
+        }
+    </style>
 </head>
-<body>
-11111111111
+
+<body class="no-skin">
+<div id="navbar" class="navbar navbar-default">
+    <script type="text/javascript">
+        try {
+            ace.settings.check('navbar', 'fixed')
+        } catch (e) {
+
+        }
+    </script>
+    <div class="navbar-container" id="navbar-container">{{template "./public/page_header.tpl" .}}</div>
+</div>
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.check('main-container', 'fixed')
+        } catch (e) {
+
+        }
+    </script>
+    {{/*<div id="sidebar" class="sidebar responsive">{{template "./public/meun.tpl" .}}</div>*/}}
+    <div id="sidebar" class="sidebar responsive">
+    {{template "./public/meun.tpl" .}}
+    </div>
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <script type="text/javascript">
+                    try {
+                        ace.settings.check('breadcrumbs', 'fixed')
+                    } catch (e) {
+
+                    }
+                </script>
+            {{template "./public/ur_here.tpl" .}}
+            </div>
+            <div class="page-content">
+                <table border="0" cellpadding="2" cellspacing="0" width="600">
+                    <tbody>
+                    <tr>
+                        <td valign="top">
+                            <h1>欢迎使用魔麟-玩家管理后台</h1>
+                            <h1></h1>
+                            <div class="cp-desc-messages">
+                                <table border="0" cellpadding="2" cellspacing="0">
+                                    <tbody>
+                                    <tr>
+                                        <td><b>GO Version</b></td>
+                                        <td>1.5</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Database</b></td>
+                                        <td>MySQL 5.5</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Author</b></td>
+                                        <td>Peter.Wang</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{{template "./public/base_script.tpl"}}
 </body>
 </html>
