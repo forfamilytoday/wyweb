@@ -62,6 +62,10 @@ func (c *UserController) AjaxData() {
 		fmt.Println(datalist.Error.Error())
 	}
 
+	/*for _,val:=range datalist.Data{
+
+	}*/
+
 	retData["data"] = datalist.Data
 	retData["draw"] = draw
 	retData["recordsTotal"] = datalist.Total
