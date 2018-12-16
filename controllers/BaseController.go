@@ -15,14 +15,14 @@ type BaseSearch struct {
 	order string
 }
 
-func (c *BaseController)RetOrder() (sqlRet string) {
-	length:=c.GetString("length")
-	start:=c.GetString("start")
-	parma:=c.GetString("order[0][column]")
-	order:=c.GetString("columns["+parma+"][name]")
-	asc:=c.GetString("order[0][dir]")
+func (c *BaseController) RetOrder() (sqlRet string) {
 
-	sqlRet=fmt.Sprintf("order by %v %v limit %v,%v",order,asc,start,length)
+	length := c.GetString("length")
+	start := c.GetString("start")
+	parma := c.GetString("order[0][column]")
+	order := c.GetString("columns[" + parma + "][name]")
+	asc := c.GetString("order[0][dir]")
+
+	sqlRet = fmt.Sprintf("order by %v %v limit %v,%v", order, asc, start, length)
 	return
 }
-

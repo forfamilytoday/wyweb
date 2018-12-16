@@ -5,6 +5,8 @@ import (
 	"wyweb/controllers"
 	"fmt"
 	"wyweb/models/user"
+	"strconv"
+	"time"
 )
 
 type UserController struct {
@@ -43,7 +45,7 @@ func (c *UserController) DoLogin() {
 }
 
 func (c *UserController) UserList() {
-
+	c.RetOrder()
 	c.TplName = "user/list.html"
 }
 
@@ -55,16 +57,12 @@ func (c *UserController) AjaxData() {
 
 	retData := make(map[string]interface{})
 	userInfo := new(user.User)
-	where := ""
+	where := c.GetString("search[value]")
 	datalist := userInfo.GetUsers(where, sqlRet)
 
 	if datalist.Error != nil {
 		fmt.Println(datalist.Error.Error())
 	}
-
-	/*for _,val:=range datalist.Data{
-
-	}*/
 
 	retData["data"] = datalist.Data
 	retData["draw"] = draw
@@ -76,4 +74,32 @@ func (c *UserController) AjaxData() {
 	c.ServeJSON()
 	return
 
+}
+
+func (c *UserController) Del() {
+	id, _ := strconv.Atoi(c.GetString("id"))
+	userInfo := new(user.User)
+
+	res := userInfo.Del(id)
+
+	c.Data["json"] = res
+	c.ServeJSON()
+}
+
+func (c *UserController) Add() {
+	status, _ := strconv.Atoi(c.GetString("Status"))
+	name := c.GetString("Name")
+	pwd := c.GetString("Password")
+	role := c.GetString("Role")
+
+	userInfo := user.User{
+		Name:     name,
+		Status:   status,
+		Password: pwd,
+		Role:     role,
+	}
+
+	userInfo.CreateTime, _ = strconv.Atoi(strconv.FormatInt(time.Now().Unix(), 2))
+	c.Data["json"] = userInfo.Add(&userInfo)
+	c.ServeJSON()
 }

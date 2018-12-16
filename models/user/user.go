@@ -1,6 +1,8 @@
 package user
 
-import "github.com/astaxie/beego/orm"
+import (
+	"github.com/astaxie/beego/orm"
+)
 
 type User struct {
 	Id         int    `"orm:column(id);auto;type(uint);pk"`
@@ -15,6 +17,12 @@ type UserDataRet struct {
 	Total int
 	Error error
 	Data  []User
+}
+
+type Respose struct {
+	Msg    string
+	Status int
+	Error  error
 }
 
 func init() {
@@ -40,17 +48,63 @@ func (this *User) GetUsers(where string, sqlOrderLimit string) UserDataRet {
 		Total: 0,
 		Data:  []User{},
 	}
-	where = " where 1=1 " + where
-	o := orm.NewOrm()
 
-	err := o.Raw("select count(*) from user " + where).QueryRow(&datalist.Total)
+	mywhere := " where 1=1 "
+	if where != "" {
+		mywhere += "and " + where
+	}
+
+	o := orm.NewOrm()
+	err := o.Raw("select count(*) from user " + mywhere).QueryRow(&datalist.Total)
 
 	if err == nil || datalist.Total > 0 {
-		_, err = o.Raw("SELECT * FROM user " + where + sqlOrderLimit).QueryRows(&datalist.Data)
-		datalist.Error=err
-	}else {
-		datalist.Error=err
+		_, err = o.Raw("SELECT * FROM user " + mywhere + sqlOrderLimit).QueryRows(&datalist.Data)
+		datalist.Error = err
+	} else {
+		datalist.Error = err
 	}
 
 	return datalist
+}
+
+func (this *User) Del(id int) Respose {
+	o := orm.NewOrm()
+
+	_, err := o.Delete(&User{Id: id})
+
+	if err != nil {
+		return Respose{
+			Msg:    "删除失败",
+			Error:  err,
+			Status: 0,
+		}
+	} else {
+		return Respose{
+			Msg:    "删除成功",
+			Error:  err,
+			Status: 1,
+		}
+	}
+
+}
+
+func (this *User) Add(user *User) Respose {
+
+	o := orm.NewOrm()
+
+	_, err := o.Insert(user)
+
+	if err != nil {
+		return Respose{
+			Msg:    "添加失败",
+			Error:  err,
+			Status: 0,
+		}
+	} else {
+		return Respose{
+			Msg:    "添加成功",
+			Error:  err,
+			Status: 1,
+		}
+	}
 }
