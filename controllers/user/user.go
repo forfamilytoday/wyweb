@@ -103,3 +103,30 @@ func (c *UserController) Add() {
 	c.Data["json"] = userInfo.Add(&userInfo)
 	c.ServeJSON()
 }
+
+func (c *UserController) Edit() {
+
+	userInfo := new(user.User)
+
+	where := "and id=" + c.GetString("id")
+
+	row, err := userInfo.GetRow(where)
+
+	res := make(map[string]interface{})
+
+	fmt.Println(err)
+	if err != nil {
+		res["data"] = ""
+		res["status"] = 0;
+		res["msg"] = "没有记录"
+		c.Data["json"] = res
+		c.ServeJSON()
+
+	} else {
+		res["data"] = row
+		res["status"] = 1;
+		res["msg"] = "已获取记录"
+		c.Data["json"] = res
+		c.ServeJSON()
+	}
+}

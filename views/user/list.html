@@ -70,20 +70,24 @@
                     <div class="form-group col-sm-12">
                         <label class="col-sm-2 control-label no-padding-right">所属角色</label>
                         <div class="col-sm-6">
-                            <span class="form-group ">老板</span><input type="checkbox" name="Role" value="1" class="form-group">
-                            <span class="form-group ">sb</span><input type="checkbox" name="Role" value="1" class="form-group">
+                            <span class="form-group ">老板</span><input type="checkbox" name="Role" value="1"
+                                                                      class="form-group">
+                            <span class="form-group ">sb</span><input type="checkbox" name="Role" value="1"
+                                                                      class="form-group">
                             <span class="form-group ">yige </span><input type="checkbox" name="Role" value="1">
                         </div>
                     </div>
 
 
-                    {{/*<hr />
+                    <hr/>
                     <div class="form-group col-sm-8">
                         <label class="col-sm-8 control-label no-padding-right"></label>
                         <div class="col-sm-2">
-                            <button class="btn btn-primary" id="csubmit" style="width: 100px;margin-bottom: 20px" onclick="csubmit()">提交</button>
+                            <button class="btn btn-primary" id="csubmit" style="width: 100px;margin-bottom: 20px"
+                                    onclick="csubmit()">提交
+                            </button>
                         </div>
-                    </div>*/}}
+                    </div>
 
                 </div>
                 <table id="myTable" class="table table-striped table-bordered table-hover dataTable no-footer"
@@ -185,7 +189,46 @@
     /*
      * 添加网站列表
      * */
+
     function add() {
+        /*var arrBtn = Array({
+            text: "确认",
+            "class": "btn btn-primary btn-xs",
+            click: function () {
+                var args = {
+                    "Name": $.trim($("#Name").val()),
+                    "Password": $.trim($("#Password").val()),
+                    "Status": $.trim(parseInt($("#Status").val())),
+                    "Role": $.trim(getIndex($("input:checkbox:checked")))
+                };
+                for( index in args){
+                    if (!args[index] && index != "Role") {
+                        layer.msg(index+"的值不能为空");
+                        return;
+                    }
+                }
+                $.post("/user/add", args, function (d) {
+                    if (d.Status == "1") {  //删除操作~!
+                        layer.msg(d.Msg);
+                        search();
+                        $("#loadhtml").dialog('close');
+                    } else {
+                        layer.msg(d.Msg);
+                        $("#loadhtml").dialog('close');
+                    }
+                }, "json");
+            }
+        });*/
+
+        $("#loadhtml").removeClass('hide').dialog({
+            modal: true,
+            title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='ace-icon fa fa-plus'></i>添加用户</h4></div>",
+            title_html: true,
+            width: 800,
+        });
+    }
+
+    /*function add() {
         layer.open({
             type: 1,
             title: '添加用户',
@@ -214,21 +257,77 @@
             }
         });
 
-    }
+    }*/
 
     function getIndex(obj) {
-        var arr=[];
-        $.each(obj,function () {
+        var arr = [];
+        $.each(obj, function () {
             arr.push($(this).val())
         });
         return arr.join(",")
     }
 
     function csubmit() {
+        var args = {
+            "Name": $.trim($("#Name").val()),
+            "Password": $.trim($("#Password").val()),
+            "Status": $.trim(parseInt($("#Status").val())),
+            "Role": $.trim(getIndex($("input:checkbox:checked")))
+        };
+        for (index in args) {
+            if (!args[index] && index != "Role") {
+                layer.msg(index + "的值不能为空");
+                return;
+            }
+        }
+        $.post("/user/add", args, function (d) {
+            if (d.Status == "1") {  //删除操作~!
+                layer.msg(d.Msg);
+                search();
+                $("#loadhtml").dialog('close');
+            } else {
+                layer.msg(d.Msg);
+                $("#loadhtml").dialog('close');
+            }
+        }, "json");
 
+    }
 
+    function edit(id) {
+        var returnData = null;
+        alert(11)
+        $.post("/user/edit", {"id": id}, function (data) {
+            console.log(data);
+            returnData = data.data;
+            $("#Name").val(returnData.Name);
+            $("#Password").val(returnData.Password);
+            //$("#Status").val(returnData.Status);
 
+            //处理下拉框
+            $("#Status option").each(function () {
+                if($(this).attr("value") ==returnData.Status ){
+                    $(this).attr("selected", "selected");
+                    return false;
+                }
+            });
 
+            //处理复选框
+            var arr=[];
+            $("#Role").each(function () {
+                arr = returnData.Role.split(",")
+                if ($.inArray($(this).attr("value"),arr)){
+                    $(this).attr("checked","checked")
+                }
+            });
+
+            $("#loadhtml").removeClass('hide').dialog({
+                modal: true,
+                title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='ace-icon fa fa-plus'></i>添加用户</h4></div>",
+                title_html: true,
+                width: 800,
+            });
+
+        });
     }
 
     /**
@@ -236,7 +335,7 @@
      * @param id
      * @param name
      */
-    function edit(id) {
+    function editbak(id) {
         var returnData = null;
         $.post("/user/edit", {"Id": id}, function (d) {
             returnData = d.ResultObject;
