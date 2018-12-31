@@ -15,7 +15,7 @@
   <a href="#" class="navbar-brand">
     <small>
       <i class="fa fa-desktop"></i>
-      魔麟管理后台
+      wyweb
     </small>
   </a>
 

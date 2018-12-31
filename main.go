@@ -32,6 +32,7 @@ func init() {
 
 	//开启session
 	beego.BConfig.WebConfig.Session.SessionOn = true
+	beego.BConfig.WebConfig.Session.SessionCookieLifeTime =100
 }
 
 func main() {

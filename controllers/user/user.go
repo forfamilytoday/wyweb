@@ -38,10 +38,9 @@ func (c *UserController) DoLogin() {
 		ret["msg"] = ""
 		c.Data["json"] = ret
 		//记录session
-		c.SetSession(datalist.Name, datalist.Name)
+		c.SetSession("userName", datalist.Name)
 	}
 	c.ServeJSON()
-	return
 }
 
 func (c *UserController) UserList() {
@@ -87,10 +86,13 @@ func (c *UserController) Del() {
 }
 
 func (c *UserController) Add() {
+
 	status, _ := strconv.Atoi(c.GetString("Status"))
 	name := c.GetString("Name")
 	pwd := c.GetString("Password")
 	role := c.GetString("Role")
+
+	Id := c.GetString("Id")
 
 	userInfo := user.User{
 		Name:     name,
@@ -99,7 +101,14 @@ func (c *UserController) Add() {
 		Role:     role,
 	}
 
-	userInfo.CreateTime, _ = strconv.Atoi(strconv.FormatInt(time.Now().Unix(), 2))
+	//处理修改逻辑
+	if Id != "" {
+		userInfo.Id, _ = strconv.Atoi(c.GetString("Id"))
+		c.Data["json"] = userInfo.Update(&userInfo)
+		c.ServeJSON()
+	}
+
+	userInfo.CreateTime = strconv.FormatInt(time.Now().Unix(), 10)
 	c.Data["json"] = userInfo.Add(&userInfo)
 	c.ServeJSON()
 }
@@ -130,3 +139,5 @@ func (c *UserController) Edit() {
 		c.ServeJSON()
 	}
 }
+
+

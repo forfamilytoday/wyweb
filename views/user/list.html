@@ -34,8 +34,7 @@
                 <div style="float:left;" class="form-inline">
 
                     <div class="form-group">
-                        <label>用户名称</label>
-                        <input type="text" class="form-control" name="s_values" id="mySearch" filter="true"/>
+                        <input type="text" class="form-control" name="s_values" id="mySearch" filter="true" placeholder="用户名称"/>
                     </div>
                 </div>
                 <button onclick="search()" class="btn btn-white btn-info" id>搜索</button>
@@ -43,6 +42,7 @@
                         onclick="add()">添 加
                 </button>
                 <div id="loadhtml" style="margin-top: 12px;display: none;">
+                    <input type="text" id="Id" hidden="hidden">
                     <div class="form-group col-sm-12">
                         <label class="col-sm-2 control-label no-padding-right"> 用户名 </label>
                         <div class="col-sm-4">
@@ -191,35 +191,6 @@
      * */
 
     function add() {
-        /*var arrBtn = Array({
-            text: "确认",
-            "class": "btn btn-primary btn-xs",
-            click: function () {
-                var args = {
-                    "Name": $.trim($("#Name").val()),
-                    "Password": $.trim($("#Password").val()),
-                    "Status": $.trim(parseInt($("#Status").val())),
-                    "Role": $.trim(getIndex($("input:checkbox:checked")))
-                };
-                for( index in args){
-                    if (!args[index] && index != "Role") {
-                        layer.msg(index+"的值不能为空");
-                        return;
-                    }
-                }
-                $.post("/user/add", args, function (d) {
-                    if (d.Status == "1") {  //删除操作~!
-                        layer.msg(d.Msg);
-                        search();
-                        $("#loadhtml").dialog('close');
-                    } else {
-                        layer.msg(d.Msg);
-                        $("#loadhtml").dialog('close');
-                    }
-                }, "json");
-            }
-        });*/
-
         $("#loadhtml").removeClass('hide').dialog({
             modal: true,
             title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='ace-icon fa fa-plus'></i>添加用户</h4></div>",
@@ -268,13 +239,21 @@
     }
 
     function csubmit() {
+
         var args = {
             "Name": $.trim($("#Name").val()),
             "Password": $.trim($("#Password").val()),
             "Status": $.trim(parseInt($("#Status").val())),
             "Role": $.trim(getIndex($("input:checkbox:checked")))
         };
-        for (index in args) {
+
+        //判断是修改还是新增
+        Id = $("#Id").val();
+        if (Id){
+            args["Id"] = Id;
+        }
+
+            for (index in args) {
             if (!args[index] && index != "Role") {
                 layer.msg(index + "的值不能为空");
                 return;
@@ -295,9 +274,8 @@
 
     function edit(id) {
         var returnData = null;
-        alert(11)
+        $("#Id").val(id);
         $.post("/user/edit", {"id": id}, function (data) {
-            console.log(data);
             returnData = data.data;
             $("#Name").val(returnData.Name);
             $("#Password").val(returnData.Password);
@@ -305,94 +283,29 @@
 
             //处理下拉框
             $("#Status option").each(function () {
-                if($(this).attr("value") ==returnData.Status ){
+                if ($(this).attr("value") == returnData.Status) {
                     $(this).attr("selected", "selected");
                     return false;
                 }
             });
 
             //处理复选框
-            var arr=[];
+            var arr = [];
             $("#Role").each(function () {
                 arr = returnData.Role.split(",")
-                if ($.inArray($(this).attr("value"),arr)){
-                    $(this).attr("checked","checked")
+                if ($.inArray($(this).attr("value"), arr)) {
+                    $(this).attr("checked", "checked")
                 }
             });
 
             $("#loadhtml").removeClass('hide').dialog({
                 modal: true,
-                title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='ace-icon fa fa-plus'></i>添加用户</h4></div>",
+                title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='ace-icon fa fa-plus'></i>修改用户</h4></div>",
                 title_html: true,
                 width: 800,
             });
 
         });
-    }
-
-    /**
-     * 编辑
-     * @param id
-     * @param name
-     */
-    function editbak(id) {
-        var returnData = null;
-        $.post("/user/edit", {"Id": id}, function (d) {
-            returnData = d.ResultObject;
-            if (d.Result == "1") {  //编辑操作~!
-                $('#Agentid').val(d.ResultObject.Agentid);
-                $('#Agentname').val(d.ResultObject.Agentname);
-                $('#Weburl').val(d.ResultObject.Weburl);
-                $('#csort').val(d.ResultObject.Sort);
-
-                //处理多选框
-                if (d.ResultObject.Isforeign == "1") {
-                    $('#Isforeign').attr('checked', 'checked');
-                } else {
-                    $('#Isforeign').removeAttr('checked');
-                }
-
-                //处理select框
-                $("#Projectid option").each(function () {
-                    if ($(this).attr('value') == d.ResultObject.Projectid) {
-                        $(this).attr("selected", "selected");
-                        return false;
-                    }
-                });
-
-            } else {
-                layer.msg(d.ResultString);
-            }
-        }, "JSON");
-
-        /*
-         * 编辑提交
-         * */
-        showDiv($('#loadhtml'), '修改平台信息', function () {
-            //编辑提交逻辑
-
-            //提取数据
-            var args = {
-                "Id": returnData.Id,
-                "Agentid": $.trim($('#Agentid').val()),
-                "Agentname": $.trim($('#Agentname').val()),
-                "Projectid": $.trim($('#Projectid').val()),
-                "Weburl": $.trim($('#Weburl').val()),
-                "Sort": $.trim($('#csort').val()),
-                "Isforeign": $('#Isforeign').is(":checked") ? 1 : 0
-            };
-            if (args.Agentid < 1 || args.Agentname.length < 2 /*|| args.Weburl.length<10*/) {
-                layer.alert("请将信息填写完整");
-                return false;
-            } else {
-                $.post("/authorization/Agentlist/Edit", args, function (d) {
-                    layer.msg(d.ResultString);
-                    if (d.Result == "1") myTable.search();
-                }, "JSON")
-            }
-
-            $(this).dialog('close');
-        }, '确定', '返回', 700);
     }
 
     function del(id) {

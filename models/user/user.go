@@ -10,7 +10,7 @@ type User struct {
 	Password   string `"orm:column(password);size(30);type(string);"`
 	Role       string `"orm:column(role);size(50);type(string)"`
 	Status     int    `"orm:column(status);size(4);type(tinyint)"`
-	CreateTime int    `"orm:column(createtime);size(4);type(int)"`
+	CreateTime string    `"orm:column(createtime);size(30);type(string)"`
 }
 
 type UserDataRet struct {
@@ -103,6 +103,26 @@ func (this *User) Add(user *User) Respose {
 	} else {
 		return Respose{
 			Msg:    "添加成功",
+			Error:  err,
+			Status: 1,
+		}
+	}
+}
+
+func (this *User) Update(user *User) Respose {
+	o := orm.NewOrm()
+
+	_, err := o.Update(user,"Name","Role","Status","Password")
+
+	if err != nil {
+		return Respose{
+			Msg:    "更新失败",
+			Error:  err,
+			Status: 0,
+		}
+	} else {
+		return Respose{
+			Msg:    "更新成功",
 			Error:  err,
 			Status: 1,
 		}
