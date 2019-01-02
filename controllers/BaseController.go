@@ -20,12 +20,25 @@ type BaseSearch struct {
 }
 
 func (c *BaseController) RetOrder() (sqlRet string) {
-
 	length := c.GetString("length")
+	if length == "" {
+		length = "10"
+	}
 	start := c.GetString("start")
+	if start == "" {
+		start = "0"
+	}
 	parma := c.GetString("order[0][column]")
 	order := c.GetString("columns[" + parma + "][name]")
+
+	if order == "" {
+		order = c.GetString("columns[0][name]")
+	}
 	asc := c.GetString("order[0][dir]")
+
+	if asc == "" {
+		asc = "asc"
+	}
 
 	sqlRet = fmt.Sprintf("order by %v %v limit %v,%v", order, asc, start, length)
 	return
