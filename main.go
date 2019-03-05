@@ -7,8 +7,10 @@ import (
 	"github.com/astaxie/beego"
 	"strconv"
 	HELPS "wyweb/utils"
+	"github.com/robfig/cron"
+	"fmt"
 )
- 
+
 func init() {
 	orm.Debug = true
 	orm.RegisterDriver("mysql", orm.DRMySQL)
@@ -32,9 +34,20 @@ func init() {
 
 	//开启session
 	beego.BConfig.WebConfig.Session.SessionOn = true
-	beego.BConfig.WebConfig.Session.SessionCookieLifeTime =100
+	beego.BConfig.WebConfig.Session.SessionCookieLifeTime = 3600
+
 }
 
 func main() {
+	c := cron.New()
+
+	spec := "0 0 23 * * ?"
+
+	c.AddFunc(spec, func() {
+		fmt.Println(11111111111)
+		HELPS.Goquery()
+	})
+	c.Start()
+	//开启爬虫
 	beego.Run()
 }

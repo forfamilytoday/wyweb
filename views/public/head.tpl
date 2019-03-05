@@ -2,7 +2,7 @@
 <meta charset="utf-8" />
 <meta name="description" content="overview &amp; stats" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-<title>时空王座 - 玩家管理</title>
+<title>wyweb管理</title>
 
 <!-- bootstrap & fontawesome -->
 <link rel="stylesheet" href="/static/assets/css/bootstrap.css" />
@@ -50,7 +50,7 @@
 
 <!-- DataTables -->
 <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
-<![endif]-->
+
 
 <style type="text/css">
 .page-header { padding-bottom: 0}
